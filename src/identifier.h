@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/// @brief This was stolen from treesitter generate's parser, when asked to match the following regex `/[_\p{L}\p{Emoji}][_0-9\p{L}\p{Emoji}]*/u`
+/// @param c The codepoint to check
+/// @return true if the codepoint is '_', 0-9, part of the Letter unicode category or part of the Emoji unicode category
 inline bool is_valid_identifier_char(int32_t c) {
   return (c < 9742
     ? (c < 3520
