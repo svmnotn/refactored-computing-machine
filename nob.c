@@ -1,0 +1,21 @@
+#define NOB_IMPLEMENTATION
+#include "./src/nob.h"
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    NOB_GO_REBUILD_URSELF(argc, argv);
+
+    if (!nob_mkdir_if_not_exists("build")) return 1;
+
+    Nob_Cmd cmd = {0};
+    nob_cmd_append(&cmd, "clang");
+    nob_cmd_append(&cmd, "-D_CRT_SECURE_NO_WARNINGS=0");
+    nob_cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb");
+    nob_cmd_append(&cmd, "-I./src/nob.h");
+    nob_cmd_append(&cmd, "./src/lang.c");
+    nob_cmd_append(&cmd, "-o", "./build/lang.exe");
+    if (!nob_cmd_run_sync(cmd)) return 1;
+
+    return 0;
+}

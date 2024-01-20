@@ -1,0 +1,6 @@
+.vscode
+build
+nob
+*.old
+*.exe
+*.pdb

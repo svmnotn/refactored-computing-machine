@@ -1,0 +1,28 @@
+
+
+/// Hehehehhe
+pub mut blah = "asodaoosda"; // skipped!
+
+π = 3.1514;
+π = 3.15_14;
+π = 3_15_14;
+
+bin = 2#100110;
+hex = 16#FF_AB_D0;
+
+/*
+
+This should never show up
+
+
+*/
+
+/** Doc Many a line comment! */
+
+pub 😀 = fn() -> () {
+    trust { 
+        #include <stdio.h>
+        printf("Hello World\n"); 
+    };
+    return ();
+};
