@@ -1210,6 +1210,51 @@ utf8codepoint(const utf8_int8_t *utf8_restrict str,
   return (utf8_int8_t *)str;
 }
 
+/* Sets out_codepoint to the current utf8 codepoint in str, and returns the
+ * address of the next utf8 codepoint after the current one in str. */
+utf8_constexpr14_impl utf8_int8_t *
+utf8ncodepoint(const utf8_int8_t *utf8_restrict str,
+              size_t length,
+              utf8_int32_t *utf8_restrict out_codepoint) {
+  if (0xf0 == (0xf8 & str[0])) {
+    if (length < 4) {
+      *out_codepoint = 0;
+      return str;
+    }
+    /* 4 byte utf8 codepoint */
+    *out_codepoint = ((0x07 & str[0]) << 18) | ((0x3f & str[1]) << 12) |
+                     ((0x3f & str[2]) << 6) | (0x3f & str[3]);
+    str += 4;
+  } else if (0xe0 == (0xf0 & str[0])) {
+    if (length < 3) {
+      *out_codepoint = 0;
+      return str;
+    }
+    /* 3 byte utf8 codepoint */
+    *out_codepoint =
+        ((0x0f & str[0]) << 12) | ((0x3f & str[1]) << 6) | (0x3f & str[2]);
+    str += 3;
+  } else if (0xc0 == (0xe0 & str[0])) {
+    if (length < 2) {
+      *out_codepoint = 0;
+      return str;
+    }
+    /* 2 byte utf8 codepoint */
+    *out_codepoint = ((0x1f & str[0]) << 6) | (0x3f & str[1]);
+    str += 2;
+  } else {
+    if (length < 1) {
+      *out_codepoint = 0;
+      return str;
+    }
+    /* 1 byte utf8 codepoint otherwise */
+    *out_codepoint = str[0];
+    str += 1;
+  }
+
+  return (utf8_int8_t *)str;
+}
+
 utf8_constexpr14_impl size_t utf8codepointcalcsize(const utf8_int8_t *str) {
   if (0xf0 == (0xf8 & str[0])) {
     /* 4 byte utf8 codepoint */

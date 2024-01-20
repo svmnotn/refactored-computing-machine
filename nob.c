@@ -14,7 +14,11 @@ int main(int argc, char **argv)
     nob_cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb");
     nob_cmd_append(&cmd, "-I./src/nob.h");
     nob_cmd_append(&cmd, "./src/lang.c");
+#ifdef _WIN32
     nob_cmd_append(&cmd, "-o", "./build/lang.exe");
+#else
+    nob_cmd_append(&cmd, "-o", "./build/lang");
+#endif
     if (!nob_cmd_run_sync(cmd)) return 1;
 
     return 0;
