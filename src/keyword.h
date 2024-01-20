@@ -30,7 +30,7 @@ typedef struct {
   KeywordLiteral_t literal;
 } Keyword_t;
 
-static inline size_t get_keyword_literal_length(KeywordLiteral_t literal) {
+inline size_t get_keyword_literal_length(KeywordLiteral_t literal) {
   switch (literal) {
     case KeywordLiteral_Fn:
     case KeywordLiteral_If:
@@ -56,7 +56,7 @@ static inline size_t get_keyword_literal_length(KeywordLiteral_t literal) {
   }
 }
 
-static inline char *get_keyword_literal_text(KeywordLiteral_t literal) {
+inline char *get_keyword_literal_text(KeywordLiteral_t literal) {
   switch (literal) {
     case KeywordLiteral_Fn:       return "fn";
     case KeywordLiteral_If:       return "if";
@@ -78,7 +78,7 @@ static inline char *get_keyword_literal_text(KeywordLiteral_t literal) {
 #define compare(text, length_left, literal) \
   if ((length_left) >= get_keyword_literal_length((literal)) && !strncmp((text), get_keyword_literal_text((literal)), get_keyword_literal_length((literal)))) return (literal)
 
-static inline KeywordLiteral_t get_next_keyword_literal(const char* text, size_t length_left) {
+inline KeywordLiteral_t get_next_keyword_literal(const char* text, size_t length_left) {
   compare(text, length_left, KeywordLiteral_Fn);
   compare(text, length_left, KeywordLiteral_If);
   compare(text, length_left, KeywordLiteral_For);

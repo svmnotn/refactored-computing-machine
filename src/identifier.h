@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-static inline bool is_valid_identifier_char(int32_t c) {
+inline bool is_valid_identifier_char(int32_t c) {
   return (c < 9742
     ? (c < 3520
       ? (c < 2544
@@ -663,8 +663,5 @@ typedef struct {
   size_t length;
   const char* text;
 } Identifier_t;
-
-Identifier_t get_next_identifier(const char* text, size_t* length, size_t* line) {
-}
 
 #endif

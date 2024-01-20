@@ -10,8 +10,8 @@ int main(int argc, char **argv)
 
     Nob_Cmd cmd = {0};
     nob_cmd_append(&cmd, "clang");
-    nob_cmd_append(&cmd, "-D_CRT_SECURE_NO_WARNINGS=0");
-    nob_cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb");
+    nob_cmd_append(&cmd, "-xc", "-std=c2x");
+    nob_cmd_append(&cmd, "-Wall", "-Wextra", "-ggdb", "-pedantic");
     nob_cmd_append(&cmd, "-I./src/nob.h");
     nob_cmd_append(&cmd, "./src/lang.c");
 #ifdef _WIN32

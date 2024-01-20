@@ -25,6 +25,9 @@
 
 #ifndef NOB_H_
 #define NOB_H_
+#if defined(_WIN32) && defined(__clang__)
+#pragma clang system_header
+#endif
 
 #define NOB_ASSERT assert
 #define NOB_REALLOC realloc

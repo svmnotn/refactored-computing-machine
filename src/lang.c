@@ -4,54 +4,16 @@
 #ifndef _UNICODE
 #define _UNICODE
 #endif
-#include <stdbool.h>
-#include <stdio.h>
-#include <stddef.h>
-#include <string.h>
 #define NOB_IMPLEMENTATION
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include "lexer.h"
 #include "nob.h"
 #include "token.h"
 #include "utf8.h"
-
-typedef struct
-{
-  Tokens_t tokens;
-  const char* const text_start;
-  const char* const final_char;
-  size_t current_line_index;
-  size_t current_column;
-  const char* current_line;
-  const char* current_char;
-} Lexer_t;
-
-int32_t lexer_next_codepoint(Lexer_t* lexer) {
-  int32_t codepoint = 0;
-  lexer->current_char = utf8ncodepoint(
-    lexer->current_char,
-    lexer->final_char - lexer->current_char,
-    &codepoint);
-  lexer->current_column++;
-  return codepoint;
-}
-
-int32_t lexer_peek_next_codepoint(Lexer_t* lexer) {
-  int32_t codepoint = 0;
-  char* next = utf8ncodepoint(
-    lexer->current_char,
-    lexer->final_char - lexer->current_char,
-    &codepoint);
-  utf8ncodepoint(
-    next,
-    lexer->final_char - next,
-    &codepoint);
-  return codepoint;
-}
-
-void lexer_increment_line(Lexer_t* lexer) {
-  lexer->current_line_index++;
-  lexer->current_column = 0;
-  lexer->current_line = lexer->current_char + 1;
-}
 
 void skip_whitespace(Lexer_t* lexer, int32_t* codepoint) {
   while (*codepoint != 0 && isspace(*codepoint)) {
@@ -61,7 +23,7 @@ void skip_whitespace(Lexer_t* lexer, int32_t* codepoint) {
 }
 
 void process_punctuation(Lexer_t* lexer, int32_t* codepoint) {
-  PunctuationLiteral_t punct = get_punctuation_literal_from_char(codepoint);
+  PunctuationLiteral_t punct = get_punctuation_literal_from_char(*codepoint);
   while (*codepoint != 0 && punct != PunctuationLiteral_Unknown) {
     Token_t token = { 0 };
     token.type = TokenType_Punctuation;
@@ -72,36 +34,8 @@ void process_punctuation(Lexer_t* lexer, int32_t* codepoint) {
     nob_da_append(&lexer->tokens, token);
 
     *codepoint = lexer_next_codepoint(lexer);
-    punct = get_punctuation_literal_from_char(codepoint);
+    punct = get_punctuation_literal_from_char(*codepoint);
   }
-}
-
-bool token_matches(Token_t a, Token_t b) {
-  if (b.type != a.type) return false;
-
-  switch (a.type) {
-  case TokenType_Punctuation:
-    return a.punctuation.literal == b.punctuation.literal;
-  case TokenType_Keyword:
-    return a.keyword.literal == b.keyword.literal;
-  case TokenType_Identifier:
-    return utf8ncasecmp(a.identifier.text, b.identifier.text, a.identifier.length) == 0;
-  case TokenType_Comment:
-    return utf8ncasecmp(a.comment.text, b.comment.text, a.comment.length) == 0;
-  }
-}
-
-bool lexer_token_at_index_matches(Lexer_t* lexer, size_t index, Token_t needle) {
-  if (lexer->tokens.count < index) return false;
-  Token_t haystack = lexer->tokens.items[index];
-  return token_matches(needle, haystack);
-}
-
-bool lexer_rtoken_at_index_matches(Lexer_t* lexer, size_t reversedIndex, Token_t needle) {
-  if (lexer->tokens.count < reversedIndex) return false;
-  size_t index = lexer->tokens.count - 1 - reversedIndex;
-  Token_t haystack = lexer->tokens.items[index];
-  return token_matches(needle, haystack);
 }
 
 bool is_line_doc_comment(Lexer_t* lexer) {

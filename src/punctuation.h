@@ -43,7 +43,7 @@ typedef struct {
   PunctuationLiteral_t literal;
 } Punctuation_t;
 
-static inline PunctuationLiteral_t get_punctuation_literal_from_char(char c) {
+inline PunctuationLiteral_t get_punctuation_literal_from_char(char c) {
   switch (c) {
   case '{':  return PunctuationLiteral_LeftBracket;
   case '}':  return PunctuationLiteral_RightBracket;
@@ -77,7 +77,7 @@ static inline PunctuationLiteral_t get_punctuation_literal_from_char(char c) {
   }
 }
 
-static inline char get_char_from_punctuation_literal(PunctuationLiteral_t literal) {
+inline char get_char_from_punctuation_literal(PunctuationLiteral_t literal) {
   switch (literal) {
   case PunctuationLiteral_LeftBracket:        return '{';
   case PunctuationLiteral_RightBracket:       return '}';

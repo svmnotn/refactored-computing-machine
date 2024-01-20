@@ -11,7 +11,4 @@ typedef struct {
   const char* text;
 } Comment_t;
 
-bool get_next_comment(Comment_t* comment) {
-}
-
 #endif

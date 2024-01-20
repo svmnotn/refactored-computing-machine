@@ -1,6 +1,8 @@
 #ifndef LITERAL_H
 #define LITERAL_H
 
+#include <stddef.h>
+
 typedef struct {
   size_t start_byte;
   size_t line;

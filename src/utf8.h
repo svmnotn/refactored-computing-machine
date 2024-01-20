@@ -28,6 +28,9 @@
 
 #ifndef SHEREDOM_UTF8_H_INCLUDED
 #define SHEREDOM_UTF8_H_INCLUDED
+#if defined(_WIN32) && defined(__clang__)
+#pragma clang system_header
+#endif
 
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -1219,7 +1222,7 @@ utf8ncodepoint(const utf8_int8_t *utf8_restrict str,
   if (0xf0 == (0xf8 & str[0])) {
     if (length < 4) {
       *out_codepoint = 0;
-      return str;
+      return (utf8_int8_t *)str;
     }
     /* 4 byte utf8 codepoint */
     *out_codepoint = ((0x07 & str[0]) << 18) | ((0x3f & str[1]) << 12) |
@@ -1228,7 +1231,7 @@ utf8ncodepoint(const utf8_int8_t *utf8_restrict str,
   } else if (0xe0 == (0xf0 & str[0])) {
     if (length < 3) {
       *out_codepoint = 0;
-      return str;
+      return (utf8_int8_t *)str;
     }
     /* 3 byte utf8 codepoint */
     *out_codepoint =
@@ -1237,7 +1240,7 @@ utf8ncodepoint(const utf8_int8_t *utf8_restrict str,
   } else if (0xc0 == (0xe0 & str[0])) {
     if (length < 2) {
       *out_codepoint = 0;
-      return str;
+      return (utf8_int8_t *)str;
     }
     /* 2 byte utf8 codepoint */
     *out_codepoint = ((0x1f & str[0]) << 6) | (0x3f & str[1]);
@@ -1245,7 +1248,7 @@ utf8ncodepoint(const utf8_int8_t *utf8_restrict str,
   } else {
     if (length < 1) {
       *out_codepoint = 0;
-      return str;
+      return (utf8_int8_t *)str;
     }
     /* 1 byte utf8 codepoint otherwise */
     *out_codepoint = str[0];
