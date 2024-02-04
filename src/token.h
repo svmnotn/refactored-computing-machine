@@ -3,35 +3,30 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "comment.h"
 #include "identifier.h"
-#include "keyword.h"
 #include "punctuation.h"
-#include "utf8.h"
+#include "utf8_definitions.h"
 
-typedef enum
-{
-  TokenType_Comment,
-  TokenType_Keyword,
+typedef enum {
   TokenType_Identifier,
   TokenType_Punctuation,
 } TokenType_t;
 
-typedef struct
-{
-  union
-  {
-    Comment_t comment;
-    Keyword_t keyword;
-    Identifier_t identifier;
-    Punctuation_t punctuation;
+typedef struct {
+  size_t start_byte;
+  size_t line;
+  size_t start_column;
+  size_t length;
+
+  union {
+    bytes_t identifier;
+    PunctuationLiteral_t punctuation;
   };
   TokenType_t type;
 } Token_t;
 
-typedef struct
-{
-  Token_t *items;
+typedef struct {
+  Token_t* items;
   size_t count;
   size_t capacity;
 } Tokens_t;
@@ -40,14 +35,8 @@ inline bool token_matches(Token_t a, Token_t b) {
   if (b.type != a.type) return false;
 
   switch (a.type) {
-  case TokenType_Punctuation:
-    return a.punctuation.literal == b.punctuation.literal;
-  case TokenType_Keyword:
-    return a.keyword.literal == b.keyword.literal;
-  case TokenType_Identifier:
-    return utf8ncasecmp(a.identifier.text, b.identifier.text, a.identifier.length) == 0;
-  case TokenType_Comment:
-    return utf8ncasecmp(a.comment.text, b.comment.text, a.comment.length) == 0;
+  case TokenType_Punctuation: return a.punctuation == b.punctuation;
+  case TokenType_Identifier:  return utf8ncasecmp(a.identifier, b.identifier, a.length) == 0;
   }
 }
 
