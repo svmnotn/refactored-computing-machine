@@ -9,7 +9,7 @@
 /**
  * TODO: Switch to the following,
  *
- * Lex: u8 -> utf8 -> Identifier|Punctuation
+ * *done* Lex: u8 -> utf8 -> Identifier|Punctuation
  * Parse: Identifier|Punctuation -> AST? | Maybe some other array before that?
  */
 
